@@ -47,6 +47,13 @@
       width: 122px;
     }
   </style>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "1c09f065792b40b3bc4708505878b47e"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
 </head>
 
 <body>
@@ -88,6 +95,12 @@
   </main>
 
   <script>
+    //Step 5 global error handler
+    window.onerror = function() {
+      console.log("sorry, an error has occured!");
+    }
+
+
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,13 +108,122 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      //output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+
+      //Step 3 Try/Catch + Step 4 Throw and Custom Errors
+      let errBool;
+      class InvalidNumberError extends SyntaxError {
+        constructor(message) {
+          super(message);
+          this.name = "InvalidNumberError";
+        }
+      }
+
+      try {
+        errBool = false;
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        errBool = true;
+        output.innerHTML = 'An error has occured! ';
+        throw new InvalidNumberError("Invalid input! At least one input is not a proper number!");
+      } finally {
+        console.log(errBool);
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    //Step 2 Console Testings
+    let consoleLog = errorBtns[0];
+    consoleLog.addEventListener('click', () => {
+      console.log('Console Log Demo');
+    })
+
+    let consoleError = errorBtns[1];
+    consoleError.addEventListener('click', () => {
+      console.error('Console Error Demo');
+    })
+
+    let consoleCount = errorBtns[2];
+    consoleCount.addEventListener('click', () => {
+      console.count('Count Button');
+    })
+
+    let consoleWarn = errorBtns[3];
+    consoleWarn.addEventListener('click', () => {
+      console.warn('Console Warn Button');
+    })
+
+    let consoleAssert = errorBtns[4];
+    consoleAssert.addEventListener('click', () => {
+      let number = 2;
+      let errorMessage = 'The number does not equal 3';
+      console.assert( number == 3, errorMessage);
+    })
+
+    let consoleClear = errorBtns[5];
+    consoleClear.addEventListener('click', () => {
+      console.clear();
+    })
+    let consoleDir = errorBtns[6];
+    consoleDir.addEventListener('click', () => {
+      console.dir(consoleDir);
+    })
+
+    let consoleDirxml = errorBtns[7];
+    consoleDirxml.addEventListener('click', () => {
+      console.dirxml(consoleDirxml);
+    })
+
+    let consoleGroup = errorBtns[8];
+    consoleGroup.addEventListener('click', () => {
+      console.group();
+    })
+
+    let consoleGroupEnd = errorBtns[9];
+    consoleGroupEnd.addEventListener('click', () => {
+      console.groupEnd();
+    })
+
+    let consoleTable = errorBtns[10];
+    consoleTable.addEventListener('click', () => {
+      let firstItem = {name:'Bloodborne', year:2015};
+      let secondItem = {name:'Sekiro', year:2019};
+      let thirdItem = {name:'Elden Ring', year:2022};
+      console.table([firstItem, secondItem, thirdItem]);
+    })
+
+    let consoleTimer = errorBtns[11];
+    consoleTimer.addEventListener('click', () => {
+      console.time();
+    })
+
+    let consoleTimerStop = errorBtns[12];
+    consoleTimerStop.addEventListener('click', () => {
+      console.timeEnd();
+    })
+
+    let consoleTrace = errorBtns[13];
+    function deepest() {
+        console.trace();
+      }
+    function deeper() {
+        deepest();
+      }
+    function deep() {
+        deeper();
+      }
+    function handleBtnClick(event) {
+      deep();
+    }
+    consoleTrace.addEventListener('click', handleBtnClick);
+
+    let consoleGlobalError = errorBtns[14];
+    consoleGlobalError.addEventListener('click', () => {
+      BAD_CODE();
+    })
   </script>
 </body>
 
